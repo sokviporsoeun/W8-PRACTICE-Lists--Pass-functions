@@ -77,7 +77,9 @@ class _TemperatureScreenState extends State<TemperatureScreen> {
                     width: 1.0),
                   borderRadius: BorderRadius.circular(12),
                 ),
+                hintText: 'Enter a temperature',
               ),
+              
               style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 30),
