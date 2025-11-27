@@ -1,7 +1,19 @@
-import 'package:flutter/material.dart';
+//Q1: How are you going to manage this? 
+// To manage this i use a boolean variable name "showWelcomeScreen",setState() to update UI screen and two callbacks function (onConvertPressed, onBackPressed)
+// Explain your solution using a component diagram(WelcomeScreen + TemperatureScreen) :
+// Explanation:
+// - TemperatureApp controls which screen is shown.
+// - WelcomeScreen calls onConvertPressed → switch to TemperatureScreen.
+// - TemperatureScreen calls onBackPressed → switch back to WelcomeScreen.
+// - setState() updates the boolean and refreshes the UI.
+// - Both screens use callbacks to communicate with the parent instead of
+//   directly switching screens themselves.
 
+
+import 'package:flutter/material.dart';
+import 'ui/screens/temperature_screen.dart';
 import 'ui/screens/welcome_screen.dart';
- 
+//Q2
 class TemperatureApp extends StatefulWidget {
   const TemperatureApp({super.key});
 
@@ -12,11 +24,24 @@ class TemperatureApp extends StatefulWidget {
 }
 
 class _TemperatureAppState extends State<TemperatureApp> {
-  
+    bool showWelcomeScreen = true;
+
+    void handleConvertScreen() {
+      setState(() {
+        showWelcomeScreen = false;
+      });
+    }
+
+    void handleBackScreen() {
+      setState(() {
+        showWelcomeScreen = true;
+      });
+  }
   @override
   Widget build(context) {
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -29,7 +54,9 @@ class _TemperatureAppState extends State<TemperatureApp> {
               end: Alignment.bottomRight,
             ),
           ),
-          child: const WelcomeScreen(),
+          child: showWelcomeScreen
+              ? WelcomeScreen(onConvertPressed: handleConvertScreen)
+              : TemperatureScreen(onBackPressed: handleBackScreen),
         ),
       ),
     );

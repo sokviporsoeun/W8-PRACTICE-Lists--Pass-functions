@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
-class TemperatureScreen extends StatelessWidget {
-  TemperatureScreen({super.key});
+class TemperatureScreen extends StatefulWidget {
+  final VoidCallback onBackPressed;
 
+  const TemperatureScreen({super.key, required this.onBackPressed});
+
+  @override
+  State<TemperatureScreen> createState() => _TemperatureScreenState();
+}
+
+class _TemperatureScreenState extends State<TemperatureScreen> {
   final InputDecoration inputDecoration = InputDecoration(
     enabledBorder: OutlineInputBorder(
       borderSide: const BorderSide(color: Colors.white, width: 1.0),
@@ -11,6 +18,25 @@ class TemperatureScreen extends StatelessWidget {
     hintText: 'Enter a temperature',
     hintStyle: const TextStyle(color: Colors.white),
   );
+
+  final TextEditingController inputController = TextEditingController();
+  double? fahrenheiValue;
+
+  void covertToFahrenheit(String value){
+    if (value.isEmpty){
+      setState(() {
+        fahrenheiValue = null;
+      });
+      return;
+    }
+
+    final double? celsius = double.tryParse(value);
+    if (celsius != null){
+      setState(() {
+        fahrenheiValue = (celsius * 9 / 5) + 32;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +52,36 @@ class TemperatureScreen extends StatelessWidget {
               size: 120,
               color: Colors.white,
             ),
-            const Center(
-              child: Text(
+
+            Center(
+              child: GestureDetector(
+                onTap: widget.onBackPressed,
+                child: Text(
                 "Converter",
                 style: TextStyle(color: Colors.white, fontSize: 45),
               ),
+              ),
             ),
             const SizedBox(height: 50),
+            
             const Text("Temperature in Degrees:"),
             const SizedBox(height: 10),
             TextField(
-              decoration: inputDecoration,
+              controller: inputController,
+              onChanged: covertToFahrenheit,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    color: Colors.white, 
+                    width: 1.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
               style: const TextStyle(color: Colors.white),
             ),
             const SizedBox(height: 30),
+
             const Text("Temperature in Fahrenheit:"),
             const SizedBox(height: 10),
             Container(
@@ -48,7 +90,10 @@ class TemperatureScreen extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text('test'),
+              child: Text(
+                fahrenheiValue == null ? "0" : fahrenheiValue!.toStringAsFixed(2),
+                style: const TextStyle(color: Colors.black, fontSize: 18),
+              ),
             ),
           ],
         ),
