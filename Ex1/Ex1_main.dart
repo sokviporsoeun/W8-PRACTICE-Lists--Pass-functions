@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 
+//Q2
 final List<String> colorList = ["red", "blue", "green"];
 
 List<Widget> buildColorWidgets() {
